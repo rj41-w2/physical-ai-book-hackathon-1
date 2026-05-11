@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
-const API_URL = "http://localhost:8000/api/auth";
+// Helper to get the correct backend URL within hooks
+export const useBackendUrl = () => {
+  const { siteConfig } = useDocusaurusContext();
+  return siteConfig.customFields?.backendUrl as string || "http://localhost:8000";
+};
 
 export const authClient = {
   signUp: {
-    email: async (data: any, hooks: any) => {
+    email: async (data: any, hooks: any, backendUrl: string) => {
       try {
-        const response = await fetch(`${API_URL}/signup`, {
+        const response = await fetch(`${backendUrl}/api/auth/signup`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -24,7 +29,6 @@ export const authClient = {
           localStorage.setItem("token", result.access_token);
           localStorage.setItem("user_email", result.email);
           localStorage.setItem("user_name", result.full_name);
-          // Store background info for UI consistency
           localStorage.setItem("software_background", data.metadata?.softwareBackground || "");
           localStorage.setItem("hardware_background", data.metadata?.hardwareBackground || "");
           hooks.onSuccess();
@@ -38,9 +42,9 @@ export const authClient = {
     },
   },
   signIn: {
-    email: async (data: any, hooks: any) => {
+    email: async (data: any, hooks: any, backendUrl: string) => {
       try {
-        const response = await fetch(`${API_URL}/signin`, {
+        const response = await fetch(`${backendUrl}/api/auth/signin`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

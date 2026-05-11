@@ -129,6 +129,10 @@ const config: Config = {
       darkTheme: prismThemes.dracula,
     },
   } satisfies Preset.ThemeConfig,
+
+  customFields: {
+    backendUrl: process.env.BACKEND_URL || "http://localhost:8000",
+  },
 };
 
 export default config;

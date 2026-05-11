@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import BrowserOnly from '@docusaurus/BrowserOnly';
-import { authClient } from '@site/src/lib/auth-client';
+import { authClient, useBackendUrl } from '@site/src/lib/auth-client';
 import Link from '@docusaurus/Link';
 
 const NavActionsContent = () => {
+  const backendUrl = useBackendUrl();
   const [currentLang, setCurrentLang] = useState('EN');
   const { data: session } = authClient.useSession();
 

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import Layout from '@theme/Layout';
-import { authClient } from '@site/src/lib/auth-client';
+import { authClient, useBackendUrl } from '@site/src/lib/auth-client';
 import { useHistory } from '@docusaurus/router';
 import styles from './auth.module.css';
 
 export default function Signin() {
+  const backendUrl = useBackendUrl();
   const [formData, setForm] = useState({ email: '', password: '' });
   const history = useHistory();
 
@@ -21,7 +22,7 @@ export default function Signin() {
           history.push('/');
         },
         onError: (ctx) => alert(ctx.error.message),
-      });
+      }, backendUrl);
     } catch (err) {
       alert('Connection to Auth Server failed.');
     }

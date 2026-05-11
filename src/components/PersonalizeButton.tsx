@@ -2,6 +2,15 @@ import React, { useState } from 'react';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import { authClient } from '@site/src/lib/auth-client';
 
+const getBackendUrl = () => {
+  if (typeof window !== 'undefined') {
+    return window.location.hostname === 'localhost' ? "http://localhost:8000" : "";
+  }
+  return "http://localhost:8000";
+};
+
+const BASE_URL = getBackendUrl();
+
 const PersonalizeButtonContent = () => {
   const { data: session } = authClient.useSession();
   const [isPersonalized, setIsPersonalized] = useState(false);
@@ -21,7 +30,7 @@ const PersonalizeButtonContent = () => {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-          await fetch('http://localhost:8000/api/user/preferences', {
+          await fetch(`${BASE_URL}/api/user/preferences`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

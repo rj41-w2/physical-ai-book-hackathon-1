@@ -3,6 +3,7 @@ import styles from './ChatWidget.module.css';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { useBackendUrl } from '@site/src/lib/auth-client';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -10,6 +11,7 @@ interface Message {
 }
 
 const ChatWidget: React.FC = () => {
+  const backendUrl = useBackendUrl();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     { role: 'assistant', content: 'Hi! I\'m your Physical AI assistant. How can I help you today?' }
@@ -23,7 +25,7 @@ const ChatWidget: React.FC = () => {
       const token = localStorage.getItem("token");
       if (token && isOpen && messages.length === 1) {
         try {
-          const response = await fetch('http://localhost:8000/api/chat/history', {
+          const response = await fetch(`${backendUrl}/api/chat/history`, {
             headers: { 'Authorization': `Bearer ${token}` }
           });
           if (response.ok) {
@@ -42,7 +44,7 @@ const ChatWidget: React.FC = () => {
       }
     };
     loadHistory();
-  }, [isOpen]);
+  }, [isOpen, backendUrl]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -73,7 +75,7 @@ const ChatWidget: React.FC = () => {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch('http://localhost:8000/api/chat', {
+      const response = await fetch(`${backendUrl}/api/chat`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify({ message: userMessage }),
@@ -120,7 +122,7 @@ const ChatWidget: React.FC = () => {
     if (!token) return;
 
     try {
-      const response = await fetch('http://localhost:8000/api/chat/history', {
+      const response = await fetch(`${backendUrl}/api/chat/history`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
