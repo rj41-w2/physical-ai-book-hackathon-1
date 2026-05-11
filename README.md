@@ -1,41 +1,60 @@
-# Website
+# Physical AI & Humanoid Robotics Course Website
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+This is a production-grade documentation platform for a Physical AI course, featuring a built-in RAG (Retrieval-Augmented Generation) Chatbot and personalized learning experiences.
 
-## Installation
+## Features
 
+- **Docusaurus Frontend**: Clean, fast, and modern documentation UI.
+- **RAG Chatbot**: An AI assistant that answers questions based specifically on the book's content using Qdrant (Vector DB) and Groq (LLM).
+- **User Authentication**: Secure Signup/Signin with Neon Postgres.
+- **Personalization**: AI responses tailored to your software and hardware background.
+- **Chat History**: Persistent conversation history for logged-in users.
+- **Markdown & Syntax Highlighting**: Beautiful rendering of technical explanations and code blocks.
+
+---
+
+## Project Structure
+
+- `/docs`: MDX files for the book chapters.
+- `/src`: Docusaurus frontend components and custom logic.
+- `/rag-backend`: FastAPI backend, Vector search, and Relational database logic.
+
+---
+
+## Quick Start
+
+### 1. Frontend Setup
 ```bash
-yarn
+# Install dependencies
+npm install
+
+# Start development server
+npm start
 ```
 
-## Local Development
+### 2. Backend Setup
+Detailed instructions can be found in the [Backend README](./rag-backend/README.md).
 
-```bash
-yarn start
-```
+1. Set up your `.env` file in `/rag-backend`.
+2. Install Python dependencies: `pip install -r rag-backend/requirements.txt`
+3. Initialize the database: `python rag-backend/init_db.py`
+4. Ingest book data: `python rag-backend/ingest_book.py`
+5. Start the API: `python rag-backend/main.py`
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
-
-## Build
-
-```bash
-yarn build
-```
-
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+---
 
 ## Deployment
 
-Using SSH:
+- **Frontend**: Can be deployed to Vercel, Netlify, or GitHub Pages.
+- **Backend**: Can be deployed to Render, Railway, or any VPS.
+- **Database**: Use [Neon.tech](https://neon.tech) for Postgres and [Qdrant Cloud](https://qdrant.tech) for Vector search.
 
-```bash
-USE_SSH=true yarn deploy
-```
+---
 
-Not using SSH:
+## 🤝 Contributing
 
-```bash
-GIT_USER=<Your GitHub username> yarn deploy
-```
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+## 📜 License
+
+This project is open-source. See the LICENSE file for details.
