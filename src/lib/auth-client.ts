@@ -1,10 +1,23 @@
 import { useState, useEffect } from 'react';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
-// Helper to get the correct backend URL within hooks
+// Open-Source Friendly URL Management
 export const useBackendUrl = () => {
   const { siteConfig } = useDocusaurusContext();
-  return siteConfig.customFields?.backendUrl as string || "http://localhost:8000";
+  
+  // 1. Priority: Vercel/Build-time Environment Variable
+  const configUrl = siteConfig.customFields?.backendUrl as string;
+  
+  if (typeof window !== 'undefined') {
+    // 2. Localhost detection
+    if (window.location.hostname === 'localhost') {
+      return "http://localhost:8000";
+    }
+    // 3. Return the config URL (Hugging Face)
+    return configUrl || ""; 
+  }
+  
+  return configUrl || "http://localhost:8000";
 };
 
 export const authClient = {
