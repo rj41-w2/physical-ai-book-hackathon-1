@@ -9,6 +9,7 @@
 .cache-loader
 
 # Misc
+.env
 .DS_Store
 .env.local
 .env.development.local
@@ -21,3 +22,10 @@ yarn-error.log*
 
 
 Hackathon I_ Physical AI & Humanoid Robotics Textbook.md
+
+_pycache__/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
