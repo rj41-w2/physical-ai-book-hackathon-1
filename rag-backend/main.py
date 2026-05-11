@@ -16,12 +16,17 @@ load_dotenv()
 
 app = FastAPI(title="RAG Chatbot Backend")
 
-# CORS middleware
-# In production, replace ["*"] with your actual frontend domain
-# Example: allow_origins=["https://your-physical-ai-book.vercel.app"]
+# CORS middleware - Secure Whitelist
+frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
+origins = [
+    "http://localhost:3000", # Local development
+    "http://localhost:8000",
+    frontend_url,            # Production Vercel URL
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[os.getenv("FRONTEND_URL", "http://localhost:3000")],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
