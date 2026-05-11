@@ -11,17 +11,27 @@ import styles from './index.module.css';
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
   return (
-    <header className={clsx('hero hero--primary', styles.heroBanner)}>
+    <header className={clsx('hero', styles.heroBanner)}>
+      <div className={styles.gridBackground}></div>
       <div className="container">
-        <Heading as="h1" className="hero__title">
-          {siteConfig.title}
+        <div className={styles.badge}>HACKATHON 2026</div>
+        <Heading as="h1" className={styles.heroTitle}>
+          Physical AI <span className={styles.accent}>&</span> Humanoid Robotics
         </Heading>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
+        <p className={styles.heroSubtitle}>
+          Bridging the gap between digital brains and physical bodies. 
+          Master the future of embodied intelligence.
+        </p>
         <div className={styles.buttons}>
           <Link
-            className="button button--secondary button--lg"
-            to="/docs/intro">
-            Docusaurus Tutorial - 5min ⏱️
+            className="button button--primary button--lg"
+            to="/docs/module1-ros2">
+            Start Learning Module 1
+          </Link>
+          <Link
+            className="button button--outline button--secondary button--lg"
+            to="/specs/intro">
+            View Technical Specs
           </Link>
         </div>
       </div>
@@ -33,10 +43,10 @@ export default function Home(): ReactNode {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
+      title="Physical AI & Humanoid Robotics"
+      description="A comprehensive course on Physical AI, ROS 2, and Humanoid Robotics simulation.">
       <HomepageHeader />
-      <main>
+      <main className={styles.mainContent}>
         <HomepageFeatures />
       </main>
     </Layout>

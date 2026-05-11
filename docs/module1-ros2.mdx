@@ -1,0 +1,115 @@
+---
+sidebar_position: 1
+title: "Module 1: The Robotic Nervous System (ROS 2)"
+description: "Mastering the middleware that powers Physical AI and Humanoid Robotics."
+---
+
+# Module 1: The Robotic Nervous System (ROS 2)
+
+Welcome to the first deep dive of the Physical AI course. Before we can build a brain that understands the world, we must build the **nervous system** that allows the brain to talk to the body. This is the role of **ROS 2 (Robot Operating System)**.
+
+## Why ROS 2?
+
+In a humanoid robot, hundreds of messages are passed every second:
+- **Sensory Data**: "The left foot has touched the ground."
+- **Motor Commands**: "Rotate the right shoulder by 15 degrees."
+- **State Information**: "Battery level is 45%."
+
+ROS 2 acts as the glue (middleware) that handles this communication reliably, even across different computers or hardware modules.
+
+---
+
+## 1. Core Concepts: The Building Blocks
+
+### Nodes
+A **Node** is a single-purpose process that performs a task (e.g., one node for the camera, one for the motor controller).
+- **Rule**: Keep nodes small and modular.
+
+### Topics: The "Radio Stations"
+Topics follow a **Publisher/Subscriber** pattern.
+- **Publisher**: A node that sends data (e.g., a camera node publishing an image).
+- **Subscriber**: A node that listens for data (e.g., a computer vision node listening for an image).
+- **Analogy**: It's like a radio station. Anyone can tune in, and anyone can broadcast.
+
+### Services: The "Phone Call"
+Services follow a **Request/Response** pattern.
+- **Use Case**: When you need a specific task done once (e.g., "Reset the robot's position").
+- **Analogy**: Like calling a restaurant to book a table. You ask, they confirm.
+
+### Actions: The "Long-Term Goal"
+Actions are used for tasks that take time (e.g., "Walk to the kitchen").
+- **Feedback**: Actions provide progress updates (e.g., "I am 50% there").
+- **Preemption**: You can cancel an action midway.
+
+---
+
+## 2. Setting Up Your ROS 2 Environment
+
+To start developing, you need a **Workspace**. Follow these steps in your Ubuntu terminal:
+
+```bash
+# Create the workspace directory
+mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws/src
+
+# Create a new Python package
+ros2 pkg create --build-type ament_python my_first_robot_pkg
+```
+
+### Your First Node (Python)
+Create a file named `simple_node.py` in your package:
+
+```python
+import rclpy
+from rclpy.node import Node
+
+class MyNode(Node):
+    def __init__(self):
+        super().__init__('hello_robot_node')
+        self.get_logger().info('Hello, Physical AI World!')
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = MyNode()
+    rclpy.spin(node)
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+```
+
+---
+
+## 3. Humanoid Anatomy: URDF
+
+A **URDF (Unified Robot Description Format)** is an XML file that tells ROS 2 what your robot looks like. It defines:
+1. **Links**: The physical parts (arms, legs, torso).
+2. **Joints**: The connections (knees, elbows, neck).
+
+### Basic Humanoid Structure
+```xml
+<robot name="humanoid">
+  <link name="base_link">
+    <!-- The Pelvis -->
+  </link>
+
+  <joint name="neck_joint" type="revolute">
+    <parent link="base_link"/>
+    <child link="head_link"/>
+    <origin xyz="0 0 1.5"/>
+  </joint>
+
+  <link name="head_link">
+    <!-- The Head -->
+  </link>
+</robot>
+```
+
+---
+
+## Summary of Module 1
+By mastering these fundamentals, you have laid the groundwork for **Embodied Intelligence**. In the next module, we will move from the nervous system to the **Digital Twin**, where we will simulate these robots in high-fidelity environments.
+
+:::tip Key Takeaway
+ROS 2 isn't just software; it's the infrastructure that turns a static machine into a responsive, programmable agent.
+:::

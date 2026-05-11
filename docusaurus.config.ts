@@ -5,9 +5,9 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
-  favicon: 'img/favicon.ico',
+  title: 'AI & Robotics Book',
+  tagline: 'Mastering Embodied Intelligence & Humanoid Robotics',
+  favicon: 'img/ai-robotics.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
@@ -15,21 +15,17 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://your-docusaurus-site.example.com',
+  url: 'https://physical-ai-book.example.com',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
 
   // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'panaversity',
+  projectName: 'physical-ai-book',
 
   onBrokenLinks: 'throw',
 
-  // Even if you don't use internationalization, you can use this field to set
-  // useful metadata like html lang. For example, if your site is Chinese, you
-  // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
@@ -41,26 +37,10 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/panaversity/physical-ai-book/tree/main/',
         },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-          // Useful options to enforce blogging best practices
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
-        },
+        blog: false, // Disabling blog as requested
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -68,28 +48,47 @@ const config: Config = {
     ],
   ],
 
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'specs',
+        path: '.specify/specs',
+        routeBasePath: 'specs',
+        sidebarPath: './sidebarsSpecs.ts',
+      },
+    ],
+  ],
+
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/docusaurus-social-card.jpg',
+    image: 'img/ai-robotics.png',
     colorMode: {
+      defaultMode: 'dark',
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: 'My Site',
+      title: 'AI & Robotics Book',
       logo: {
-        alt: 'My Site Logo',
-        src: 'img/logo.svg',
+        alt: 'AI & Robotics Logo',
+        src: 'img/ai-robotics.svg',
       },
       items: [
         {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Tutorial',
+          label: 'Read Book',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/facebook/docusaurus',
+          type: 'doc',
+          docId: 'intro',
+          position: 'left',
+          label: 'Specs',
+          docsPluginId: 'specs',
+        },
+        {
+          href: 'https://github.com/panaversity/spec-kit-plus',
           label: 'GitHub',
           position: 'right',
         },
@@ -99,11 +98,15 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'Course Content',
           items: [
             {
-              label: 'Tutorial',
+              label: 'Read Book',
               to: '/docs/intro',
+            },
+            {
+              label: 'Technical Specs',
+              to: '/specs/intro',
             },
           ],
         },
@@ -111,34 +114,30 @@ const config: Config = {
           title: 'Community',
           items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+              label: 'Panaversity',
+              href: 'https://panaversity.org',
             },
             {
               label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'X',
-              href: 'https://x.com/docusaurus',
+              href: 'https://discord.gg/panaversity',
             },
           ],
         },
         {
-          title: 'More',
+          title: 'Resources',
           items: [
             {
-              label: 'Blog',
-              to: '/blog',
+              label: 'Spec-Kit Plus',
+              href: 'https://github.com/panaversity/spec-kit-plus',
             },
             {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              label: 'Hackathon Details',
+              href: 'https://github.com/panaversity/physical-ai-book-hackathon-1',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} AI & Robotics Book. Built for the Physical AI Hackathon with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,

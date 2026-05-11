@@ -1,11 +1,69 @@
 .features {
   display: flex;
   align-items: center;
-  padding: 2rem 0;
+  padding: 4rem 0;
   width: 100%;
+  background-color: var(--page-bg);
+}
+
+.featureCol {
+  margin-bottom: 2rem;
+}
+
+.featureCard {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  padding: 2.5rem 1.5rem;
+  height: 100%;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.featureCard:hover {
+  border-color: var(--ifm-color-primary);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 242, 255, 0.1);
+}
+
+.featureCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 0;
+  background: var(--ifm-color-primary);
+  transition: height 0.3s ease;
+}
+
+.featureCard:hover::before {
+  height: 100%;
+}
+
+.moduleBadge {
+  font-family: var(--ifm-heading-font-family);
+  font-size: 0.75rem;
+  color: var(--ifm-color-primary);
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+}
+
+.featureTitle {
+  font-family: var(--ifm-heading-font-family);
+  color: var(--page-text);
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.featureDescription {
+  color: var(--page-secondary-text);
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 .featureSvg {
-  height: 200px;
-  width: 200px;
+  display: none; /* Removed SVG for industrial look */
 }

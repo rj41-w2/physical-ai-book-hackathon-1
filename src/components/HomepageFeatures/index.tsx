@@ -5,52 +5,60 @@ import styles from './styles.module.css';
 
 type FeatureItem = {
   title: string;
-  Svg: React.ComponentType<React.ComponentProps<'svg'>>;
+  moduleNum: string;
   description: ReactNode;
 };
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    title: 'The Robotic Nervous System',
+    moduleNum: '01',
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Master ROS 2 middleware, communication patterns, and URDF robot descriptions 
+        to build the foundational connectivity of humanoid robots.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: 'The Digital Twin',
+    moduleNum: '02',
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Simulate complex physics, gravity, and sensors in Gazebo and Unity. 
+        Create high-fidelity environments for risk-free robot training.
       </>
     ),
   },
   {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: 'The AI-Robot Brain',
+    moduleNum: '03',
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Leverage NVIDIA Isaac Sim and SDKs for photorealistic perception, 
+        VSLAM, and hardware-accelerated navigation.
+      </>
+    ),
+  },
+  {
+    title: 'Vision-Language-Action',
+    moduleNum: '04',
+    description: (
+      <>
+        Integrate LLMs with physical actuators. Use OpenAI Whisper and GPT 
+        to translate natural language into complex ROS 2 actions.
       </>
     ),
   },
 ];
 
-function Feature({title, Svg, description}: FeatureItem) {
+function Feature({title, moduleNum, description}: FeatureItem) {
   return (
-    <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
-      </div>
-      <div className="text--center padding-horiz--md">
-        <Heading as="h3">{title}</Heading>
-        <p>{description}</p>
+    <div className={clsx('col col--3', styles.featureCol)}>
+      <div className={styles.featureCard}>
+        <div className={styles.moduleBadge}>MODULE {moduleNum}</div>
+        <Heading as="h3" className={styles.featureTitle}>{title}</Heading>
+        <p className={styles.featureDescription}>{description}</p>
       </div>
     </div>
   );
