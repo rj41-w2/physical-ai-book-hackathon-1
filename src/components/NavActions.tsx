@@ -1,48 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import BrowserOnly from '@docusaurus/BrowserOnly';
+import { authClient } from '@site/src/lib/auth-client';
+import Link from '@docusaurus/Link';
 
 const NavActionsContent = () => {
   const [currentLang, setCurrentLang] = useState('EN');
+  const { data: session } = authClient.useSession();
 
   useEffect(() => {
-    // 1. Define the global callback
-    (window as any).googleTranslateElementInit = () => {
-      new (window as any).google.translate.TranslateElement({
-        pageLanguage: 'en',
-        includedLanguages: 'ur,en',
-        layout: (window as any).google.translate.TranslateElement.InlineLayout.SIMPLE,
-        autoDisplay: false
-      }, 'google_translate_element_hidden');
-    };
-
-    // 2. Add the script if not already present
-    if (!document.getElementById('google-translate-script')) {
-      const script = document.createElement('script');
-      script.id = 'google-translate-script';
-      script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-      script.async = true;
-      document.body.appendChild(script);
-    }
-
-    // 3. Add styles to hide the clunky UI
-    if (!document.getElementById('google-translate-styles')) {
-      const style = document.createElement('style');
-      style.id = 'google-translate-styles';
-      style.innerHTML = `
-        .goog-te-banner-frame.skiptranslate, .goog-te-gadget-icon, .goog-te-gadget-simple img { display: none !important; }
-        body { top: 0px !important; }
-        .goog-te-menu-value span:nth-child(5) { display:none !important; }
-        .goog-te-gadget-simple { background-color: transparent !important; border: none !important; padding: 0 !important; }
-        #google_translate_element_hidden { display: none !important; }
-        .skiptranslate iframe { visibility: hidden !important; display: none !important; }
-        .goog-tooltip { display: none !important; }
-        .goog-tooltip:hover { display: none !important; }
-        .goog-text-highlight { background-color: transparent !important; border: none !important; box-shadow: none !important; }
-      `;
-      document.head.appendChild(style);
-    }
-
-    // 4. Polling for cookie
+    // Polling for Google Translate cookie
     const interval = setInterval(() => {
       const match = document.cookie.match(/googtrans=\/en\/([^;]+)/);
       if (match && match[1] === 'ur') {
@@ -57,21 +23,50 @@ const NavActionsContent = () => {
 
   const toggleLanguage = () => {
     const googleCombo = document.querySelector('.goog-te-combo') as HTMLSelectElement;
-    
     if (!googleCombo) {
-      alert('AI Translation is loading... Please wait a few seconds.');
+      alert('AI Translation is loading... Please wait.');
       return;
     }
-
     const targetLang = currentLang === 'EN' ? 'ur' : 'en';
     googleCombo.value = targetLang;
     googleCombo.dispatchEvent(new Event('change'));
     setCurrentLang(targetLang === 'ur' ? 'UR' : 'EN');
   };
 
+  const handleLogout = async () => {
+    await authClient.signOut();
+    window.location.reload();
+  };
+
   return (
-    <div style={{ display: 'flex', alignItems: 'center', marginLeft: '12px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginLeft: '12px' }}>
+      {/* Auth State */}
+      {session ? (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '0.8rem', color: 'var(--page-secondary-text)' }}>
+            Hi, {session.user.name.split(' ')[0]}
+          </span>
+          <button 
+            onClick={handleLogout}
+            className="button button--sm button--outline button--secondary"
+            style={{ padding: '2px 8px', fontSize: '0.7rem' }}
+          >
+            Logout
+          </button>
+        </div>
+      ) : (
+        <Link 
+          to="/signin" 
+          className="button button--sm button--primary"
+          style={{ padding: '4px 12px', fontSize: '0.75rem', fontWeight: 'bold' }}
+        >
+          Sign In
+        </Link>
+      )}
+
       <div id="google_translate_element_hidden"></div>
+      
+      {/* Language Toggle */}
       <span 
         onClick={toggleLanguage}
         style={{ 
@@ -86,7 +81,6 @@ const NavActionsContent = () => {
         }}
         onMouseOver={(e) => (e.currentTarget.style.opacity = '0.7')}
         onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
-        title={currentLang === 'EN' ? "Translate to Urdu" : "Back to English"}
       >
         {currentLang}
       </span>
