@@ -1,0 +1,98 @@
+---
+sidebar_position: 5
+title: "Module 4: Vision-Language-Action (VLA)"
+description: "The peak of Physical AI: Bridging natural language and robotic motion."
+---
+
+# Module 4: Vision-Language-Action (VLA)
+
+Welcome to the final module of the Physical AI course. We have covered the nervous system, the world simulation, and the hardware-accelerated brain. Now, we add **High-Level Reasoning**. 
+
+Vision-Language-Action (VLA) models represent the frontier where a robot doesn't just "see" an object—it understands its context and can follow complex, unscripted commands like *"Go find my glasses and bring them to me."*
+
+## Learning Objectives
+- Master the **Voice-to-Action** pipeline using Whisper.
+- Understand **Cognitive Planning**: Decomposing natural language into ROS 2 tasks.
+- Explore **Multimodal Models** (Vision + Language + Action).
+- Prepare for the **Capstone Project: The Autonomous Humanoid**.
+
+---
+
+## 1. Voice-to-Action (Whisper)
+
+A humanoid robot should be interactive. Using **OpenAI Whisper**, we can convert spoken language into text directly on the robot's edge computer (Jetson Orin).
+
+### Whisper ROS 2 Node Integration
+```python
+# Conceptual Whisper Node
+import rclpy
+from std_msgs.msg import String
+import whisper
+
+class VoiceCommandNode(Node):
+    def __init__(self):
+        self.model = whisper.load_model("base")
+        self.publisher_ = self.create_publisher(String, 'voice_text', 10)
+        
+    def listen_and_transcribe(self):
+        # Audio capturing logic here
+        result = self.model.transcribe("audio_chunk.wav")
+        msg = String()
+        msg.data = result["text"]
+        self.publisher_.publish(msg)
+```
+
+---
+
+## 2. Cognitive Planning: The LLM as a Planner
+
+The greatest challenge in robotics is **Long-Horizon Planning**. If a user says "Clean the room," the robot must:
+1. Identify all objects on the floor (Vision).
+2. Plan a path to each object (Navigation).
+3. Pick up the object (Manipulation).
+4. Place it in the correct bin (Reasoning).
+
+### The Prompting Strategy
+We use LLMs to translate natural language into a **Task Graph**:
+- **Input**: "Bring me the blue cup."
+- **LLM Output (JSON)**:
+```json
+[
+  {"action": "search", "object": "blue cup"},
+  {"action": "navigate_to", "target": "blue cup"},
+  {"action": "grasp", "object": "blue cup"},
+  {"action": "navigate_to", "target": "user"}
+]
+```
+
+---
+
+## 3. VLA Models: The End-to-End Future
+
+Traditional robotics separates vision, planning, and control. **VLA Models** (like Google’s RT-2) attempt to do everything in a single neural network. They take images and text as input and output motor torques directly. While still research-intensive, this is the future of truly adaptive robots.
+
+---
+
+## 4. Capstone Project: The Autonomous Humanoid
+
+Your final challenge is to pull everything together. You will build a simulated humanoid that can:
+1. **Listen**: Receive a voice command.
+2. **Plan**: Decompose the command into ROS 2 actions.
+3. **Act**: Navigate a simulated environment in Gazebo/Isaac, avoid obstacles using Nav2, and perform a simple manipulation task.
+
+### Evaluation Criteria:
+- **Accuracy**: Did the robot follow the command?
+- **Efficiency**: Did it take a logical path?
+- **Robustness**: Did it recover from unexpected obstacles?
+
+---
+
+## Summary: Your Journey into Physical AI
+You have moved from basic middleware to advanced embodied intelligence. You now possess the skills to build robots that don't just move, but **perceive, reason, and act** in our human world.
+
+:::tip Final Advice
+The field of Physical AI is moving fast. Keep experimenting with newer models like **Gemini 1.5 Pro** or **Claude 3.5** for your robot's reasoning layer!
+:::
+
+# Congratulations!
+You have completed the theoretical and practical foundations of **Physical AI & Humanoid Robotics**.

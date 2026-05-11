@@ -1,14 +1,23 @@
-# Specifications Intro
+---
+sidebar_position: 1
+title: "Specifications Overview"
+---
 
-Welcome to the Spec-Driven Development section of the Physical AI Book.
+# Specifications Overview
 
-Here you will find technical specifications for each chapter and feature.
+Welcome to the technical specifications for the **AI & Robotics Book**.
 
-## Structure
-- Each specification is located in `.specify/specs/`.
-- We follow the Project Constitution (located in `.specify/memory/constitution.md`).
+Following the **Spec-Kit Plus** methodology, every chapter in this book is preceded by a functional and technical specification. This ensures that the content is accurate, consistent, and meets the rigorous standards of **Physical AI & Humanoid Robotics**.
 
-## Workflow
-1. Create a spec from the template (located in `.specify/templates/spec.md`).
-2. Review and Approve the spec.
-3. Generate the chapter in the `docs/` folder.
+## Our Workflow
+1. **Specify**: Define the technical requirements and learning objectives.
+2. **Plan**: Outline the implementation strategy and content structure.
+3. **Execute**: Generate the final textbook chapter based on the spec and plan.
+
+## Available Specifications
+- **Module 1**: ROS 2 Fundamentals
+- **Module 2**: Digital Twins (Gazebo & Unity)
+- **Module 3**: AI-Robot Brain (NVIDIA Isaac™)
+- **Module 4**: Vision-Language-Action (VLA)
+
+You can explore each specification in the sidebar to understand the engineering thought process behind every module.

@@ -1,0 +1,77 @@
+---
+sidebar_position: 4
+title: "Module 3: The AI-Robot Brain (NVIDIA Isaac™)"
+description: "Hardware-accelerated perception and autonomous navigation."
+---
+
+# Module 3: The AI-Robot Brain
+
+With the nervous system and the digital twin in place, we now turn to the **Brain**. In Physical AI, the "brain" must process massive amounts of sensor data in real-time. This is where the **NVIDIA Isaac™** platform comes in.
+
+## Learning Objectives
+- Master the **NVIDIA Isaac Sim** environment.
+- Understand **Hardware Acceleration** for perception.
+- Implement **Isaac ROS VSLAM** for spatial awareness.
+- Configure **Nav2** for humanoid path planning and obstacle avoidance.
+- Learn the power of **Synthetic Data Generation (SDG)**.
+
+---
+
+## 1. Hardware Acceleration: The Need for Speed
+
+Traditional CPU-based processing is too slow for a humanoid robot that needs to balance and navigate simultaneously. NVIDIA Isaac offloads heavy computations—like image processing and matrix multiplication—to the **GPU**.
+
+### Isaac ROS vs. Standard ROS 2
+While standard ROS 2 provides the communication framework, **Isaac ROS** provides optimized versions of common algorithms (GEMs) that run directly on NVIDIA hardware (Jetson or RTX GPUs).
+
+---
+
+## 2. Isaac ROS VSLAM: Seeing the World
+
+**VSLAM (Visual Simultaneous Localization and Mapping)** allows a robot to build a map of an unknown environment while keeping track of its own location using only camera data.
+
+### Key Isaac ROS VSLAM Features:
+- **Stereo Vision Support**: Uses depth data for better accuracy.
+- **IMU Fusion**: Combines visual data with accelerometer/gyroscope data to prevent "drift."
+- **Low Latency**: Capable of processing 60+ FPS on modern GPUs.
+
+```bash
+# Conceptual command to launch Isaac ROS VSLAM
+ros2 launch isaac_ros_visual_slam isaac_ros_visual_slam.launch.py \
+    input_left_image_topic:=/camera/left/image_raw \
+    input_right_image_topic:=/camera/right/image_raw \
+    input_imu_topic:=/imu/data
+```
+
+---
+
+## 3. Nav2: Navigating the Physical World
+
+**Nav2** is the professional navigation stack for ROS 2. For humanoids, navigation is complex because the robot's "footprint" changes as it walks.
+
+### Path Planning for Humanoids
+- **Costmaps**: 2D or 3D grids that represent obstacles.
+- **Planners**: Compute the shortest path (e.g., NavFn, Smac Planner).
+- **Controllers**: Send velocity commands to the joints to follow the path (e.g., DWB Controller).
+
+:::info Bipedal Note
+Unlike wheeled robots, humanoids must consider their "center of mass" and "swing foot" clearance when planning paths over uneven terrain.
+:::
+
+---
+
+## 4. Synthetic Data Generation (SDG)
+
+Training a robot's vision system requires millions of images. **Isaac Replicator** allows you to generate these images automatically in simulation.
+
+- **Domain Randomization**: Automatically change lighting, colors, and textures to make the AI more robust.
+- **Perfect Labeling**: The simulator "knows" exactly where every object is, providing pixel-perfect labels for training.
+
+---
+
+## Summary
+By integrating NVIDIA Isaac, you have given your robot a high-performance brain capable of understanding its surroundings and making complex decisions. In the final module, we will explore **Vision-Language-Action (VLA)**, where we connect this brain to the world of Large Language Models.
+
+:::tip Hardware Requirement
+Ensure you are using **Ubuntu 22.04** and have the **NVIDIA Container Toolkit** installed to run Isaac Sim and ROS effectively.
+:::

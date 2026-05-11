@@ -1,0 +1,98 @@
+---
+sidebar_position: 3
+title: "Module 2: The Digital Twin (Gazebo & Unity)"
+description: "Creating virtual mirrors of physical reality to train AI agents."
+---
+
+# Module 2: The Digital Twin
+
+In Module 1, we built the "Nervous System." Now, we build the **world**. A Digital Twin is more than just a 3D model; it is a virtual mirror of physical reality, complete with gravity, friction, and sensor noise.
+
+## Learning Objectives
+- Understand the **Sim-to-Real** pipeline.
+- Learn the differences between **URDF** and **SDF**.
+- Configure physics engines for stable humanoid locomotion.
+- Simulate LiDAR and Depth Cameras for perception training.
+- Evaluate the use of **Unity** for human-robot interaction.
+
+---
+
+## 1. The Physics of Reality
+
+For an AI to learn how to walk, the simulation must respect the laws of physics. ROS 2 primarily uses **Gazebo** for this purpose.
+
+### Physics Engines
+- **ODE (Open Dynamics Engine)**: The default for Gazebo. Fast and stable for rigid body dynamics.
+- **Bullet**: Known for its advanced collision detection and soft body dynamics.
+- **DART**: Excellent for articulated robots like humanoids.
+
+:::info Pro Tip
+When simulating humanoids, high-frequency physics updates (e.g., 1000Hz) are often necessary to maintain balance.
+:::
+
+---
+
+## 2. Gazebo: The Robot's Sandbox
+
+Gazebo uses **SDF (Simulation Description Format)**, an XML format that extends URDF to include simulation-specific properties like friction, surface materials, and sensor plugins.
+
+### Adding a LiDAR Sensor
+To give your robot eyes, you must add a sensor plugin to your SDF file:
+
+```xml
+<sensor name="lidar" type="gpu_ray">
+  <pose>0 0 0.5 0 0 0</pose>
+  <update_rate>10</update_rate>
+  <ray>
+    <scan>
+      <horizontal>
+        <samples>640</samples>
+        <resolution>1</resolution>
+        <min_angle>-1.57</min_angle>
+        <max_angle>1.57</max_angle>
+      </horizontal>
+    </scan>
+    <range>
+      <min>0.1</min>
+      <max>30.0</max>
+    </range>
+  </ray>
+  <plugin name="gazebo_ros_ray_sensor" filename="libgazebo_ros_ray_sensor.so">
+    <ros>
+      <remapping>~/out:=scan</remapping>
+    </ros>
+    <output_type>sensor_msgs/LaserScan</output_type>
+  </plugin>
+</sensor>
+```
+
+---
+
+## 3. Unity: High-Fidelity Interaction
+
+While Gazebo excels at physics, **Unity** is the leader in visual fidelity and complex environmental interactions.
+
+### Why Use Unity?
+1. **Synthetic Data**: Generate photorealistic images for training computer vision models.
+2. **Human-Robot Interaction (HRI)**: Simulate humans in the environment with high-quality animations.
+3. **VR/AR Integration**: Test how humans might interact with your robot using a VR headset.
+
+---
+
+## 4. SDF vs. URDF: A Comparison
+
+| Feature | URDF | SDF |
+| :--- | :--- | :--- |
+| **Primary Use** | ROS 2 State/Kinematics | Gazebo Simulation |
+| **World Support** | No (Single Robot only) | Yes (Multiple Robots + Worlds) |
+| **Friction/Contact**| Limited | Comprehensive |
+| **Complexity** | Simple | High |
+
+---
+
+## Summary
+By creating a Digital Twin, you have built a risk-free playground for your AI. In the next module, we will introduce the **AI-Robot Brain** using the **NVIDIA Isaac** platform, where simulation meets hardware acceleration.
+
+:::caution Hardware Check
+Running Gazebo or Unity requires an NVIDIA RTX GPU for real-time performance. Ensure your drivers are updated!
+:::
