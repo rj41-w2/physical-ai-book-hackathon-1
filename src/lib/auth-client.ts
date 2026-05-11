@@ -36,7 +36,12 @@ export const authClient = {
           }),
         });
 
-        const result = await response.json();
+        let result;
+        try {
+          result = await response.json();
+        } catch (e) {
+          throw new Error(`Server returned non-JSON response: ${response.status}`);
+        }
 
         if (response.ok) {
           localStorage.setItem("token", result.access_token);
@@ -48,7 +53,7 @@ export const authClient = {
         } else {
           hooks.onError({ error: { message: result.detail || "Signup failed" } });
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error("Signup error:", err);
         throw err;
       }
@@ -66,7 +71,12 @@ export const authClient = {
           }),
         });
 
-        const result = await response.json();
+        let result;
+        try {
+          result = await response.json();
+        } catch (e) {
+          throw new Error(`Server returned non-JSON response: ${response.status}`);
+        }
 
         if (response.ok) {
           localStorage.setItem("token", result.access_token);
@@ -76,7 +86,7 @@ export const authClient = {
         } else {
           hooks.onError({ error: { message: result.detail || "Signin failed" } });
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error("Signin error:", err);
         throw err;
       }

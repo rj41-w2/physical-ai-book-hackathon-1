@@ -35,8 +35,8 @@ export default function Signup() {
         },
         onError: (ctx) => alert(ctx.error.message),
       }, backendUrl);
-    } catch (err) {
-      alert('Connection to Auth Server failed. Please ensure backend is running.');
+    } catch (err: any) {
+      alert(`Signup Failed: ${err.message || "Unknown error"}`);
     }
   };
 

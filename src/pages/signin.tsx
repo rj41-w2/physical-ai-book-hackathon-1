@@ -23,8 +23,8 @@ export default function Signin() {
         },
         onError: (ctx) => alert(ctx.error.message),
       }, backendUrl);
-    } catch (err) {
-      alert('Connection to Auth Server failed.');
+    } catch (err: any) {
+      alert(`Signin Failed: ${err.message || "Unknown error"}`);
     }
   };
 
