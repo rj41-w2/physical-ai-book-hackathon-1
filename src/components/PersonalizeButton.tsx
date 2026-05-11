@@ -15,10 +15,30 @@ const PersonalizeButtonContent = () => {
   const software = session.user.metadata?.softwareBackground || 'Beginner';
   const hardware = session.user.metadata?.hardwareBackground || 'None';
 
-  const togglePersonalization = () => {
+  const togglePersonalization = async () => {
     setIsPersonalized(!isPersonalized);
     if (!isPersonalized) {
-      alert(`AI Agent: Optimizing content for a ${software} software developer with ${hardware} hardware experience.`);
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          await fetch('http://localhost:8000/api/user/preferences', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              software_background: software,
+              hardware_background: hardware
+            })
+          });
+          alert(`AI Agent: Preferences saved! Optimizing content for a ${software} software developer with ${hardware} hardware experience.`);
+        } catch (err) {
+          console.error("Failed to save preferences:", err);
+        }
+      } else {
+        alert(`AI Agent: Optimizing content for a ${software} software developer with ${hardware} hardware experience.`);
+      }
     }
   };
 

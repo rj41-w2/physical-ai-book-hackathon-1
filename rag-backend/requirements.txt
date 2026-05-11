@@ -5,3 +5,11 @@ openai
 psycopg2-binary
 python-dotenv
 pydantic
+sentence-transformers
+langchain-text-splitters
+tqdm
+sqlalchemy
+passlib[bcrypt]
+python-jose[cryptography]
+python-multipart
+pydantic[email]

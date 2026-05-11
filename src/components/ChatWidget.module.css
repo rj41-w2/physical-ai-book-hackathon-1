@@ -45,6 +45,27 @@
   padding: 1rem;
   background-color: var(--ifm-color-primary);
   color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.clearButton {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  opacity: 0.8;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.clearButton:hover {
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 .chatHeader h3 {
@@ -67,6 +88,39 @@
   border-radius: 12px;
   font-size: 0.9rem;
   line-height: 1.4;
+}
+
+.messageContent {
+  word-wrap: break-word;
+}
+
+.messageContent p {
+  margin-bottom: 0.5rem;
+}
+
+.messageContent p:last-child {
+  margin-bottom: 0;
+}
+
+.messageContent code {
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 0.1rem 0.3rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-family: monospace;
+}
+
+.messageContent pre {
+  background: transparent !important;
+  margin: 0.5rem 0 !important;
+  padding: 0 !important;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.messageContent ul, .messageContent ol {
+  margin-bottom: 0.5rem;
+  padding-left: 1.2rem;
 }
 
 .userMessage {
