@@ -31,6 +31,8 @@ const config: Config = {
     locales: ['en'],
   },
 
+  headTags: [],
+
   presets: [
     [
       'classic',
@@ -48,17 +50,7 @@ const config: Config = {
     ],
   ],
 
-  plugins: [
-    [
-      '@docusaurus/plugin-content-docs',
-      {
-        id: 'specs',
-        path: '.specify/specs',
-        routeBasePath: 'specs',
-        sidebarPath: './sidebarsSpecs.ts',
-      },
-    ],
-  ],
+  plugins: [],
 
   themeConfig: {
     // Replace with your project's social card
@@ -81,11 +73,8 @@ const config: Config = {
           label: 'Read Book',
         },
         {
-          type: 'doc',
-          docId: 'intro',
-          position: 'left',
-          label: 'Specs',
-          docsPluginId: 'specs',
+          type: 'custom-nav-actions',
+          position: 'right',
         },
         {
           href: 'https://github.com/panaversity/spec-kit-plus',
@@ -103,10 +92,6 @@ const config: Config = {
             {
               label: 'Read Book',
               to: '/docs/intro',
-            },
-            {
-              label: 'Technical Specs',
-              to: '/specs/intro',
             },
           ],
         },

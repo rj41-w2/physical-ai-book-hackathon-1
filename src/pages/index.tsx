@@ -28,11 +28,6 @@ function HomepageHeader() {
             to="/docs/intro">
             Start Reading
           </Link>
-          <Link
-            className="button button--outline button--secondary button--lg"
-            to="/specs/intro">
-            View Technical Specs
-          </Link>
         </div>
       </div>
     </header>
