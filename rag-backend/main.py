@@ -14,7 +14,29 @@ from routers import auth, chat, user
 
 load_dotenv()
 
+from fastapi.responses import JSONResponse
+import traceback
+
 app = FastAPI(title="RAG Chatbot Backend")
+
+# Global Error Handler to catch 500s and return JSON
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    error_msg = traceback.format_exc()
+    print(f"CRITICAL ERROR: {error_msg}") # This will show in HF Logs
+    return JSONResponse(
+        status_code=500,
+        content={"error": "Internal Server Error", "detail": str(exc)},
+    )
+
+# Proxy-aware Middleware for Hugging Face
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    try:
+        response = await call_next(request)
+        return response
+    except Exception as exc:
+        return await global_exception_handler(request, exc)
 
 # CORS middleware - Secure Whitelist
 frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
