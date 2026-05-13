@@ -14,7 +14,7 @@ function HomepageHeader() {
     <header className={clsx('hero', styles.heroBanner)}>
       <div className={styles.gridBackground}></div>
       <div className="container">
-        <div className={styles.badge}>HACKATHON 2026</div>
+        <div className={styles.badge}>HACKATHON-1 2026</div>
         <Heading as="h1" className={styles.heroTitle}>
           Physical AI <span className={styles.accent}>&</span> Humanoid Robotics
         </Heading>
@@ -28,6 +28,12 @@ function HomepageHeader() {
             to="/docs/intro">
             Start Reading
           </Link>
+          <Link
+            className="button button--secondary button--lg"
+            style={{ marginLeft: '1rem' }}
+            to="https://github.com/rj41-w2/physical-ai-book-hackathon-1">
+            GitHub Repo
+          </Link>
         </div>
       </div>
     </header>
@@ -37,13 +43,15 @@ function HomepageHeader() {
 export default function Home(): ReactNode {
   const {siteConfig} = useDocusaurusContext();
   return (
-    <Layout
-      title="Physical AI & Humanoid Robotics"
-      description="A comprehensive course on Physical AI, ROS 2, and Humanoid Robotics simulation.">
-      <HomepageHeader />
-      <main className={styles.mainContent}>
-        <HomepageFeatures />
-      </main>
-    </Layout>
+    <div data-theme-2026-home>
+      <Layout
+        title="Physical AI & Humanoid Robotics"
+        description="A comprehensive course on Physical AI, ROS 2, and Humanoid Robotics simulation.">
+        <HomepageHeader />
+        <main className={styles.mainContent}>
+          <HomepageFeatures />
+        </main>
+      </Layout>
+    </div>
   );
 }

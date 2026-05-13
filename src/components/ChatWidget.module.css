@@ -11,7 +11,7 @@
   height: 60px;
   border-radius: 50%;
   background-color: var(--ifm-color-primary);
-  color: white;
+  color: #000000;
   border: none;
   cursor: pointer;
   display: flex;
@@ -39,12 +39,14 @@
   flex-direction: column;
   overflow: hidden;
   border: 1px solid var(--ifm-toc-border-color);
+  opacity: 1 !important;
+  backdrop-filter: none !important;
 }
 
 .chatHeader {
   padding: 1rem;
   background-color: var(--ifm-color-primary);
-  color: white;
+  color: #000000;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -53,7 +55,7 @@
 .clearButton {
   background: none;
   border: none;
-  color: white;
+  color: #000000;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -126,15 +128,16 @@
 .userMessage {
   align-self: flex-end;
   background-color: var(--ifm-color-primary);
-  color: white;
+  color: #000000;
   border-bottom-right-radius: 2px;
 }
 
 .assistantMessage {
   align-self: flex-start;
-  background-color: var(--ifm-hover-overlay);
+  background-color: var(--card-bg);
   color: var(--ifm-font-color-base);
   border-bottom-left-radius: 2px;
+  border: 1px solid var(--card-border);
 }
 
 .inputArea {
@@ -142,6 +145,7 @@
   border-top: 1px solid var(--ifm-toc-border-color);
   display: flex;
   gap: 0.5rem;
+  background-color: var(--ifm-background-color);
 }
 
 .inputArea input {

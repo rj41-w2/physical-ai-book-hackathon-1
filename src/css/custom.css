@@ -4,17 +4,19 @@
  * work well for content-centric websites.
  */
 
-/* Cyber-Mechanical Theme Variables */
+/* Tech Emerald Professional Theme */
 :root {
-  --ifm-color-primary: #0088cc; /* Darker cyan for light mode */
-  --ifm-color-primary-dark: #0077b3;
-  --ifm-color-primary-darker: #0070a8;
-  --ifm-color-primary-darkest: #005c8a;
-  --ifm-color-primary-light: #0099e6;
-  --ifm-color-primary-lighter: #00aaff;
-  --ifm-color-primary-lightest: #33bbff;
+  /* Sophisticated Dark Green for Light Mode */
+  --ifm-color-primary: #00897b; 
+  --ifm-color-primary-dark: #007c6e;
+  --ifm-color-primary-darker: #007568;
+  --ifm-color-primary-darkest: #006156;
+  --ifm-color-primary-light: #009688;
+  --ifm-color-primary-lighter: #00a091;
+  --ifm-color-primary-lightest: #00bfa5;
+  
   --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --docusaurus-highlighted-code-line-bg: rgba(0, 137, 123, 0.1);
   --ifm-font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
   --ifm-heading-font-family: 'Roboto Mono', monospace;
   
@@ -28,24 +30,26 @@
 }
 
 [data-theme='dark'] {
-  --ifm-color-primary: #00f2ff;
-  --ifm-color-primary-dark: #00dae6;
-  --ifm-color-primary-darker: #00ced9;
-  --ifm-color-primary-darkest: #00abb3;
-  --ifm-color-primary-light: #1affff;
-  --ifm-color-primary-lighter: #33ffff;
-  --ifm-color-primary-lightest: #80ffff;
-  --ifm-background-color: #0a0a0a;
-  --ifm-navbar-background-color: #0a0a0a;
-  --ifm-footer-background-color: #0a0a0a;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 242, 255, 0.2);
+  /* Vibrant Neon Green for Dark Mode (Very high-tech, Matrix/Terminal feel) */
+  --ifm-color-primary: #00ffa2;
+  --ifm-color-primary-dark: #00e693;
+  --ifm-color-primary-darker: #00d984;
+  --ifm-color-primary-darkest: #00b36d;
+  --ifm-color-primary-light: #1affb4;
+  --ifm-color-primary-lighter: #33ffc1;
+  --ifm-color-primary-lightest: #80ffd6;
+  
+  --ifm-background-color: #0d1117; /* GitHub Darkish Gray-Black */
+  --ifm-navbar-background-color: #0d1117;
+  --ifm-footer-background-color: #0d1117;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 255, 162, 0.2);
   
   /* Custom Page Variables - Dark Mode */
-  --page-bg: #0a0a0a;
+  --page-bg: #0d1117;
   --page-text: #ffffff;
-  --page-secondary-text: #a0a0a0;
-  --card-bg: #111111;
-  --card-border: #222222;
+  --page-secondary-text: #8b949e;
+  --card-bg: #161b22;
+  --card-border: #30363d;
   --grid-color: #1a1a1a;
 }
 
@@ -54,18 +58,92 @@
   box-shadow: none;
 }
 
+/* Hide default color mode toggle since we added it to NavActions */
+.navbar__items--right [class*='colorModeToggle'] {
+  display: none;
+}
+
+/* Navbar Mobile Optimization */
+@media (max-width: 996px) {
+  .navbar__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Show specific items in mobile header */
+  .navbar__items--right {
+    display: flex !important;
+    align-items: center;
+    gap: 0;
+  }
+
+  .navbar__toggle {
+    margin-right: 4px !important;
+  }
+
+  /* Adjust padding for mobile header items */
+  .navbar__items--right > .navbar__item {
+    padding: 0 4px !important;
+  }
+}
+
+/* Mobile Sidebar Drawer Fix */
+.navbar-sidebar .custom-nav-item:not(.custom-nav-lang-item) {
+  display: none !important;
+}
+
+.navbar-sidebar .custom-nav-lang-item .dropdown__menu {
+  position: static !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0.5rem 1rem !important;
+  background: transparent !important;
+}
+
+.navbar-sidebar .custom-nav-lang-item .navbar__link {
+  font-weight: bold !important;
+  font-size: 1.2rem !important;
+}
+
+/* Chatbot Mobile Adjustments */
+@media (max-width: 480px) {
+  .chatWindow {
+    width: 90vw !important;
+    height: 70vh !important;
+    bottom: 80px !important;
+    right: 5vw !important;
+    left: 5vw !important;
+  }
+  
+  .toggleButton {
+    width: 50px !important;
+    height: 50px !important;
+    bottom: 1rem !important;
+    right: 1rem !important;
+  }
+}
+
 .footer {
   border-top: 1px solid var(--card-border);
+  padding: 1.5rem 0; /* Smaller footer padding */
+}
+
+.footer__copyright {
+  font-size: 0.75rem; /* Smaller copyright text */
+  color: var(--page-secondary-text);
+}
+
+.footer__links {
+  margin-bottom: 1rem;
 }
 
 .button--primary {
   background-color: var(--ifm-color-primary);
-  color: var(--page-bg);
-  border: none;
-  font-family: 'Roboto Mono', monospace;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  color: #000000 !important;
 }
 
 .button--primary:hover {
@@ -73,14 +151,45 @@
 }
 
 .button--secondary {
-  border: 1px solid var(--card-border);
-  background: transparent;
-  color: var(--page-text);
-  font-family: 'Roboto Mono', monospace;
+  background-color: var(--ifm-color-secondary);
 }
 
 .button--secondary:hover {
-  background: var(--card-bg);
-  border-color: var(--ifm-color-primary);
-  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+
+/* Hide Google Translate Banner and fix layout */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.goog-te-menu-value {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+  position: static !important;
+}
+
+html {
+  margin-top: 0 !important;
+}
+
+.skiptranslate {
+  display: none !important;
+}
+
+/* Allow the actual content to be translated but hide the UI */
+#google_translate_element {
+  display: none !important;
+}
+
+/* Hide the powered by logo if needed */
+.goog-logo-link {
+  display: none !important;
+}
+
+.goog-te-gadget {
+  color: transparent !important;
 }

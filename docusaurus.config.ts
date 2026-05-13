@@ -5,7 +5,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'AI & Robotics Book',
+  title: 'AI & Robotics',
   tagline: 'Mastering Embodied Intelligence & Humanoid Robotics',
   favicon: 'img/ai-robotics.ico',
 
@@ -33,6 +33,16 @@ const config: Config = {
 
   headTags: [],
 
+  scripts: [
+    {
+      src: 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit',
+      async: true,
+    },
+    {
+      src: '/js/google-translate.js',
+    },
+  ],
+
   presets: [
     [
       'classic',
@@ -40,7 +50,7 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           editUrl:
-            'https://github.com/panaversity/physical-ai-book/tree/main/',
+            'https://github.com/rj41-w2/physical-ai-book-hackathon-1/tree/main/',
         },
         blog: false, // Disabling blog as requested
         theme: {
@@ -58,27 +68,29 @@ const config: Config = {
     colorMode: {
       defaultMode: 'dark',
       respectPrefersColorScheme: true,
+      disableSwitch: true, 
     },
     navbar: {
-      title: 'AI & Robotics Book',
+      title: 'AI & Robotics',
       logo: {
         alt: 'AI & Robotics Logo',
         src: 'img/ai-robotics.svg',
       },
       items: [
         {
-          type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
+          type: 'custom-nav-user-mobile',
           position: 'left',
-          label: 'Read Book',
         },
         {
-          type: 'custom-nav-actions',
+          type: 'custom-nav-theme',
           position: 'right',
         },
         {
-          href: 'https://github.com/panaversity/spec-kit-plus',
-          label: 'GitHub',
+          type: 'custom-nav-lang',
+          position: 'right',
+        },
+        {
+          type: 'custom-nav-auth',
           position: 'right',
         },
       ],
@@ -103,8 +115,8 @@ const config: Config = {
               href: 'https://panaversity.org',
             },
             {
-              label: 'Discord',
-              href: 'https://discord.gg/panaversity',
+              label: 'Rehan\'s Profile',
+              href: 'https://github.com/rj41-w2',
             },
           ],
         },
@@ -117,7 +129,7 @@ const config: Config = {
             },
             {
               label: 'Hackathon Details',
-              href: 'https://github.com/panaversity/physical-ai-book-hackathon-1',
+              href: 'https://github.com/rj41-w2/physical-ai-book-hackathon-1',
             },
           ],
         },

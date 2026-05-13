@@ -9,7 +9,8 @@ sentence-transformers
 langchain-text-splitters
 tqdm
 sqlalchemy
-passlib[bcrypt]
+passlib
+bcrypt==3.2.2
 python-jose[cryptography]
 python-multipart
 pydantic[email]
