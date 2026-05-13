@@ -144,17 +144,25 @@
 .button--primary {
   background-color: var(--ifm-color-primary);
   color: #000000 !important;
+  font-weight: bold;
 }
 
 .button--primary:hover {
   background-color: var(--ifm-color-primary-dark);
+  color: #000000 !important;
 }
 
 .button--secondary {
-  background-color: var(--ifm-color-secondary);
+  background-color: var(--card-bg);
+  color: var(--page-text) !important;
+  border: 1px solid var(--card-border);
+  font-weight: bold;
 }
 
 .button--secondary:hover {
+  background-color: var(--ifm-color-primary);
+  color: #000 !important;
+  border-color: var(--ifm-color-primary);
   text-decoration: none;
 }
 

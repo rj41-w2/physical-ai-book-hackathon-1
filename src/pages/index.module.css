@@ -35,7 +35,7 @@
 
 .accent {
   color: var(--ifm-color-primary);
-  text-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+  text-shadow: 0 0 20px rgba(0, 255, 162, 0.4);
 }
 
 .badge {
@@ -67,6 +67,54 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  gap: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.buttons :global(.button) {
+  text-decoration: none !important;
+}
+
+.buttons :global(.button--primary) {
+  padding: 1rem 2.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: none;
+  box-shadow: 0 4px 14px 0 rgba(0, 137, 123, 0.3); /* Themed shadow for light mode */
+  transition: all 0.3s ease;
+}
+
+[data-theme='dark'] .buttons :global(.button--primary) {
+  box-shadow: 0 4px 14px 0 rgba(0, 255, 162, 0.3); /* Themed shadow for dark mode */
+}
+
+.buttons :global(.button--primary:hover) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 137, 123, 0.5);
+}
+
+[data-theme='dark'] .buttons :global(.button--primary:hover) {
+  box-shadow: 0 6px 20px rgba(0, 255, 162, 0.5);
+}
+
+.buttons :global(.button--secondary) {
+  padding: 1rem 2.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: transparent;
+  border: 2px solid var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+  transition: all 0.3s ease;
+}
+
+.buttons :global(.button--secondary:hover) {
+  background: var(--ifm-color-primary);
+  color: #000 !important;
+  text-decoration: none;
+  transform: translateY(-2px);
 }
 
 @media (max-width: 640px) {

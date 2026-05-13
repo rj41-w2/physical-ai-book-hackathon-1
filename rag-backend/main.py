@@ -93,7 +93,7 @@ async def chat(request: ChatRequest, db: Session = Depends(get_db), authorizatio
 
         # 3. Build the augmented prompt
         system_prompt = f"""
-You are the Physical AI assistant for the "Physical AI & Humanoid Robotics" book.
+You are the AI assistant for the "Physical AI & Humanoid Robotics" book.
 Use the following context from the book to answer the user's question.
 If the answer is not in the context, be honest and say you don't know based on the book, but offer a general robotics explanation.
 {personalization_context}
@@ -134,7 +134,7 @@ async def chat_test(request: ChatRequest):
         response = await client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
-                {"role": "system", "content": "You are the Physical AI assistant for a robotics book. Be helpful and concise."},
+                {"role": "system", "content": "You are the AI assistant for a robotics book. Be helpful and concise."},
                 {"role": "user", "content": request.message}
             ]
         )

@@ -30,7 +30,6 @@ function HomepageHeader() {
           </Link>
           <Link
             className="button button--secondary button--lg"
-            style={{ marginLeft: '1rem' }}
             to="https://github.com/rj41-w2/physical-ai-book-hackathon-1">
             GitHub Repo
           </Link>

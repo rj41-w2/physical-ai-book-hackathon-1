@@ -14,7 +14,7 @@ const ChatWidget: React.FC = () => {
   const backendUrl = useBackendUrl();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'Hi! I\'m your Physical AI assistant. How can I help you today?' }
+    { role: 'assistant', content: 'Hi! I\'m your AI assistant. How can I help you today?' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -128,7 +128,7 @@ const ChatWidget: React.FC = () => {
       });
       
       if (response.ok) {
-        setMessages([{ role: 'assistant', content: 'Hi! I\'m your Physical AI assistant. How can I help you today?' }]);
+        setMessages([{ role: 'assistant', content: 'Hi! I\'m your AI assistant. How can I help you today?' }]);
       }
     } catch (err) {
       console.error("Failed to clear history:", err);
@@ -152,7 +152,7 @@ const ChatWidget: React.FC = () => {
       {isOpen && (
         <div className={styles.chatWindow}>
           <div className={styles.chatHeader}>
-            <h3 style={{ color: 'white', margin: 0 }}>Physical AI Assistant</h3>
+            <h3 style={{ color: 'white', margin: 0 }}>AI Assistant</h3>
             {localStorage.getItem("token") && (
               <button 
                 onClick={handleClearHistory} 

@@ -54,12 +54,12 @@ export default function Signup() {
           <form onSubmit={handleSignup} className={styles.authForm}>
             <div className={styles.formGroup}>
               <label>Full Name</label>
-              <input name="name" type="text" placeholder="Zia Khan" onChange={handleChange} required />
+              <input name="name" type="text" placeholder="Rehan Jamil" onChange={handleChange} required />
             </div>
 
             <div className={styles.formGroup}>
               <label>Email Address</label>
-              <input name="email" type="email" placeholder="zia@panaversity.org" onChange={handleChange} required />
+              <input name="email" type="email" placeholder="rehanjamil@gmail.com" onChange={handleChange} required />
             </div>
 
             <div className={styles.formGroup}>
