@@ -19,7 +19,7 @@ export default function Signin() {
       }, {
         onSuccess: () => {
           alert('Welcome Back!');
-          history.push('/');
+          window.location.href = '/';
         },
         onError: (ctx) => alert(ctx.error.message),
       }, backendUrl);

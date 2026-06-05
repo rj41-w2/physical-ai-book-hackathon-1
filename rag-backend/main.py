@@ -1,5 +1,5 @@
 import os
-from fastapi import FastAPI, Depends, Header, Request
+from fastapi import FastAPI, Depends, Header, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from openai import AsyncOpenAI
 from dotenv import load_dotenv
@@ -18,6 +18,15 @@ from fastapi.responses import JSONResponse
 import traceback
 
 app = FastAPI(title="RAG Chatbot Backend")
+
+@app.on_event("startup")
+async def startup_event():
+    secret_key = os.getenv("JWT_SECRET_KEY")
+    if secret_key in ("your-secret-key-change-this-in-production", "your_jwt_secret_key_here", None):
+        print("\n" + "="*80)
+        print("SECURITY WARNING: JWT_SECRET_KEY is set to a default or weak secret.")
+        print("Please change this in your production environment to protect user sessions!")
+        print("="*80 + "\n")
 
 # Global Error Handler to catch 500s and return JSON
 @app.exception_handler(Exception)
@@ -125,8 +134,11 @@ CONTEXT:
             "context_used": context[:200] + "..." 
         }
     except Exception as e:
-        print(f"Chat error: {e}")
-        return {"error": str(e)}
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail="An error occurred while processing your chat request. Please try again later."
+        )
 
 @app.post("/api/chat-test")
 async def chat_test(request: ChatRequest):
@@ -140,7 +152,11 @@ async def chat_test(request: ChatRequest):
         )
         return {"response": response.choices[0].message.content}
     except Exception as e:
-        return {"error": str(e)}
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail="An error occurred while processing your test request. Please try again later."
+        )
 
 if __name__ == "__main__":
     import uvicorn

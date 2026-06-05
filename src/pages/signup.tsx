@@ -31,7 +31,7 @@ export default function Signup() {
       }, {
         onSuccess: () => {
           alert('Signup Successful!');
-          history.push('/');
+          window.location.href = '/';
         },
         onError: (ctx) => alert(ctx.error.message),
       }, backendUrl);

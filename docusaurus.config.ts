@@ -60,7 +60,17 @@ const config: Config = {
     ],
   ],
 
-  plugins: [],
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'specs',
+        path: '.specify/specs',
+        routeBasePath: 'specs',
+        sidebarPath: './sidebarsSpecs.ts',
+      },
+    ],
+  ],
 
   themeConfig: {
     // Replace with your project's social card

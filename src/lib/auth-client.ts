@@ -47,8 +47,8 @@ export const authClient = {
           localStorage.setItem("token", result.access_token);
           localStorage.setItem("user_email", result.email);
           localStorage.setItem("user_name", result.full_name);
-          localStorage.setItem("software_background", data.metadata?.softwareBackground || "");
-          localStorage.setItem("hardware_background", data.metadata?.hardwareBackground || "");
+          localStorage.setItem("software_background", result.software_background || data.metadata?.softwareBackground || "");
+          localStorage.setItem("hardware_background", result.hardware_background || data.metadata?.hardwareBackground || "");
           hooks.onSuccess();
         } else {
           hooks.onError({ error: { message: result.detail || "Signup failed" } });
@@ -82,6 +82,8 @@ export const authClient = {
           localStorage.setItem("token", result.access_token);
           localStorage.setItem("user_email", result.email);
           localStorage.setItem("user_name", result.full_name);
+          localStorage.setItem("software_background", result.software_background || "");
+          localStorage.setItem("hardware_background", result.hardware_background || "");
           hooks.onSuccess();
         } else {
           hooks.onError({ error: { message: result.detail || "Signin failed" } });

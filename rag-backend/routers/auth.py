@@ -25,9 +25,18 @@ class Token(BaseModel):
     token_type: str
     email: str
     full_name: str = None
+    software_background: str = None
+    hardware_background: str = None
 
 @router.post("/signup", response_model=Token)
 def signup(user_data: UserCreate, db: Session = Depends(get_db)):
+    # Validate password length
+    if not user_data.password or len(user_data.password) < 8:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Password must be at least 8 characters long"
+        )
+
     # Check if user exists
     db_user = db.query(User).filter(User.email == user_data.email).first()
     if db_user:
@@ -56,7 +65,9 @@ def signup(user_data: UserCreate, db: Session = Depends(get_db)):
         "access_token": access_token, 
         "token_type": "bearer", 
         "email": new_user.email,
-        "full_name": new_user.full_name
+        "full_name": new_user.full_name,
+        "software_background": user_data.software_background,
+        "hardware_background": user_data.hardware_background
     }
 
 @router.post("/signin", response_model=Token)
@@ -70,11 +81,24 @@ def signin(user_data: UserLogin, db: Session = Depends(get_db)):
             headers={"WWW-Authenticate": "Bearer"},
         )
     
+    # Parse preferences if exists
+    software = "Beginner"
+    hardware = "None"
+    if user.preferences and user.preferences.background:
+        try:
+            parts = user.preferences.background.split(", ")
+            software = parts[0].split(":")[1]
+            hardware = parts[1].split(":")[1]
+        except Exception:
+            pass
+
     # Generate token
     access_token = create_access_token(data={"sub": user.email})
     return {
         "access_token": access_token, 
         "token_type": "bearer", 
         "email": user.email,
-        "full_name": user.full_name
+        "full_name": user.full_name,
+        "software_background": software,
+        "hardware_background": hardware
     }
