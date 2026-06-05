@@ -41,6 +41,13 @@ Detailed instructions can be found in the [Backend README](./rag-backend/README.
 4. Ingest book data: `python rag-backend/ingest_book.py`
 5. Start the API: `python rag-backend/main.py`
 
+### 3. Running Tests
+Verify the backend installation by running pytest:
+```bash
+cd rag-backend
+python -m pytest -v
+```
+
 ---
 
 ## Deployment
@@ -57,4 +64,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📜 License
 
-This project is open-source. See the LICENSE file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

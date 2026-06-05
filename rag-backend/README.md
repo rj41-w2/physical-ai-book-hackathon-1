@@ -53,6 +53,12 @@ python main.py
 ```
 The API will be available at `http://localhost:8000`.
 
+### 5. Running Tests
+Run the automated test suite with pytest:
+```bash
+python -m pytest -v
+```
+
 ---
 
 ## API Endpoints
