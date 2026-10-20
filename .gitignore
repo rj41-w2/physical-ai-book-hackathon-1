@@ -25,6 +25,7 @@ Hackathon I_ Physical AI & Humanoid Robotics Textbook.md
 
 _pycache__/
 __pycache__/
+venv/
 *.pyc
 *.pyo
 *.pyd

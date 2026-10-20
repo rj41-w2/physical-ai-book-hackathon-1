@@ -1,7 +1,8 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text, Index
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from database.neon_db import Base
+from pgvector.sqlalchemy import Vector
 
 class User(Base):
     __tablename__ = "users"
@@ -29,9 +30,20 @@ class ChatHistory(Base):
     __tablename__ = "chat_history"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     message_role = Column(String)  # user/assistant
     message_content = Column(Text)
     timestamp = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="chat_history")
+
+    __table_args__ = (Index("ix_chat_history_user_timestamp", "user_id", "timestamp"),)
+
+class BookChunk(Base):
+    __tablename__ = "book_chunks"
+
+    id = Column(Integer, primary_key=True)
+    source = Column(String, nullable=False)
+    chunk_index = Column(Integer, nullable=False)
+    text = Column(Text, nullable=False)
+    embedding = Column(Vector(384), nullable=False)

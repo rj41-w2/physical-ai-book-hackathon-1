@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+from sqlalchemy import text
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -63,4 +64,5 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_
     user = db.query(User).filter(User.email == email).first()
     if user is None:
         raise credentials_exception
+    db.execute(text("SELECT set_config('app.current_user_id', :user_id, true)"), {"user_id": str(user.id)})
     return user

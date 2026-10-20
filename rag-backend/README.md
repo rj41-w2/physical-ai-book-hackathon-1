@@ -1,13 +1,13 @@
 # RAG Chatbot Backend
 
-This is the FastAPI backend for the Physical AI & Robotics Course. It handles Vector search (Qdrant), relational data (Neon Postgres), and LLM generation (Groq).
+This is the FastAPI backend for the Physical AI & Robotics Course. It handles vector search and relational data in Neon Postgres, rate limiting with Upstash Redis, and LLM generation with Groq.
 
 ## Tech Stack
 
 - **FastAPI**: High-performance Python framework.
-- **Qdrant**: Vector database for RAG.
-- **Neon Postgres**: Serverless relational database for users and chat history.
-- **Groq (Llama 3.3)**: Lightning-fast inference for the AI assistant.
+- **Neon Postgres + pgvector**: Serverless relational and vector database for book chunks, users, and chat history.
+- **Upstash Redis**: Shared rate limits for chat requests (10 requests per minute per user or IP).
+- **Groq (GPT-OSS 120B)**: Inference for the AI assistant.
 - **SQLAlchemy**: ORM for database management.
 - **Sentence Transformers**: Local embedding generation (`all-MiniLM-L6-v2`).
 
@@ -15,11 +15,12 @@ This is the FastAPI backend for the Physical AI & Robotics Course. It handles Ve
 
 ## ⚙️ Configuration
 
-1. Create a `.env` file in this directory (use `.env.example` as a template).
+1. Copy `.env.example` to `.env` in this directory and add your credentials. Never commit `.env` or put secret values in chat.
 2. Fill in the following:
    - `GROQ_API_KEY`: Get from [Groq Console](https://console.groq.com/).
-   - `QDRANT_URL` & `QDRANT_API_KEY`: Get from [Qdrant Cloud](https://qdrant.tech/).
+   - `GROQ_MODEL`: Optional; defaults to `openai/gpt-oss-120b`.
    - `NEON_DATABASE_URL`: Get from [Neon.tech](https://neon.tech/).
+   - `UPSTASH_REDIS_REST_URL` & `UPSTASH_REDIS_REST_TOKEN`: Get from [Upstash](https://upstash.com/).
    - `JWT_SECRET_KEY`: Any long random string.
    - `FRONTEND_URL`: URL of your frontend (default: `http://localhost:3000`).
 
@@ -42,8 +43,9 @@ python init_db.py
 ```
 
 ### 3. Ingest Book Data
-Convert your `.mdx` files into vectors and upload them to Qdrant.
+Create the schema and pgvector extension, then convert `.mdx` files into vectors in Neon.
 ```bash
+python init_db.py
 python ingest_book.py
 ```
 

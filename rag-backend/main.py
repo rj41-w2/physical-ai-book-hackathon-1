@@ -5,14 +5,32 @@ from openai import AsyncOpenAI
 from dotenv import load_dotenv
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 
 from database.neon_db import get_db
 from models.schema import ChatHistory, User
-from services.qdrant_service import qdrant_service
+from services.vector_search import vector_search_service
+from services.rate_limit import enforce_rate_limit
 from services.auth_service import decode_access_token
 from routers import auth, chat, user
 
 load_dotenv()
+GROQ_MODEL = os.getenv("GROQ_MODEL")
+if not GROQ_MODEL:
+    raise ValueError("GROQ_MODEL is not set; add it to rag-backend/.env")
+
+RESPONSE_STYLE = """
+Keep answers concise, direct, and useful: usually 2-4 sentences and under 80 words.
+For simple questions, answer in 1-2 sentences. Use up to 3 bullets only when they make
+the answer clearer; do not use tables unless the user asks for one. Avoid repeating
+the answer as a separate summary or adding an unsolicited follow-up offer.
+Match the user's language and script. If the user writes in Roman Urdu or mixes Roman
+Urdu with Urdu script, reply in Roman Urdu using Latin letters. Use Urdu script only
+when the user writes entirely in Urdu script. Keep standard technical terms in English.
+For book-specific claims, rely on the supplied context and do not invent chapters,
+examples, or features. If context lacks the answer, say so briefly, then give a short
+general explanation when helpful.
+"""
 
 from fastapi.responses import JSONResponse
 import traceback
@@ -35,7 +53,7 @@ async def global_exception_handler(request: Request, exc: Exception):
     print(f"CRITICAL ERROR: {error_msg}") # This will show in HF Logs
     return JSONResponse(
         status_code=500,
-        content={"error": "Internal Server Error", "detail": str(exc)},
+        content={"error": "Internal Server Error", "detail": "An unexpected server error occurred."},
     )
 
 # Proxy-aware Middleware for Hugging Face
@@ -82,7 +100,7 @@ async def root():
     return {"message": "RAG Chatbot API is running"}
 
 @app.post("/api/chat")
-async def chat(request: ChatRequest, db: Session = Depends(get_db), authorization: str = Header(None)):
+async def chat(request: ChatRequest, http_request: Request, db: Session = Depends(get_db), authorization: str = Header(None)):
     try:
         # 1. Optional Authentication & Personalization
         current_user = None
@@ -96,15 +114,20 @@ async def chat(request: ChatRequest, db: Session = Depends(get_db), authorizatio
                 current_user = db.query(User).filter(User.email == email).first()
                 if current_user and current_user.preferences:
                     personalization_context = f"\nUSER PROFILE: The user has indicated their background is: {current_user.preferences.background}. Please adjust your technical depth accordingly."
+                if current_user:
+                    db.execute(text("SELECT set_config('app.current_user_id', :user_id, true)"), {"user_id": str(current_user.id)})
 
-        # 2. Retrieve relevant context from Qdrant
-        context = qdrant_service.search(request.message)
+        identity = f"user:{current_user.id}" if current_user else f"ip:{http_request.client.host if http_request.client else 'unknown'}"
+        await enforce_rate_limit(identity)
+
+        # 2. Retrieve relevant context from Neon pgvector
+        context = vector_search_service.search(db, request.message)
 
         # 3. Build the augmented prompt
         system_prompt = f"""
 You are the AI assistant for the "Physical AI & Humanoid Robotics" book.
 Use the following context from the book to answer the user's question.
-If the answer is not in the context, be honest and say you don't know based on the book, but offer a general robotics explanation.
+{RESPONSE_STYLE}
 {personalization_context}
 
 CONTEXT:
@@ -112,7 +135,7 @@ CONTEXT:
 """
         
         response = await client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model=GROQ_MODEL,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": request.message}
@@ -141,12 +164,13 @@ CONTEXT:
         )
 
 @app.post("/api/chat-test")
-async def chat_test(request: ChatRequest):
+async def chat_test(request: ChatRequest, http_request: Request):
     try:
+        await enforce_rate_limit(f"ip:{http_request.client.host if http_request.client else 'unknown'}")
         response = await client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model=GROQ_MODEL,
             messages=[
-                {"role": "system", "content": "You are the AI assistant for a robotics book. Be helpful and concise."},
+                {"role": "system", "content": f"You are the AI assistant for a robotics book.\n{RESPONSE_STYLE}"},
                 {"role": "user", "content": request.message}
             ]
         )

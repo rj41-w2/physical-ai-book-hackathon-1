@@ -5,7 +5,7 @@ This is a production-grade documentation platform for a Physical AI course, feat
 ## Features
 
 - **Docusaurus Frontend**: Clean, fast, and modern documentation UI.
-- **RAG Chatbot**: An AI assistant that answers questions based specifically on the book's content using Qdrant (Vector DB) and Groq (LLM).
+- **RAG Chatbot**: An AI assistant that answers questions based specifically on the book's content using Neon Postgres with pgvector and Groq (LLM).
 - **User Authentication**: Secure Signup/Signin with Neon Postgres.
 - **Personalization**: AI responses tailored to your software and hardware background.
 - **Chat History**: Persistent conversation history for logged-in users.
@@ -54,7 +54,8 @@ python -m pytest -v
 
 - **Frontend**: Can be deployed to Vercel, Netlify, or GitHub Pages.
 - **Backend**: Can be deployed to Render, Railway, or any VPS.
-- **Database**: Use [Neon.tech](https://neon.tech) for Postgres and [Qdrant Cloud](https://qdrant.tech) for Vector search.
+- **Database**: Use [Neon.tech](https://neon.tech) for Postgres, pgvector search, user accounts, and private per-user chat history.
+- **Rate limiting**: Use [Upstash Redis](https://upstash.com) for shared chat endpoint limits.
 
 ---
 
