@@ -58,11 +58,3 @@ python -m pytest -v
 - **Rate limiting**: Use [Upstash Redis](https://upstash.com) for shared chat endpoint limits.
 
 ---
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📜 License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
