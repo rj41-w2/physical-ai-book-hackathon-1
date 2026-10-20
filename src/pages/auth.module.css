@@ -79,3 +79,23 @@
 .authCard button {
   margin-top: 1rem;
 }
+
+.notice {
+  margin: 1rem 0;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  line-height: 1.4;
+}
+
+.success {
+  color: #b8f3ca;
+  background: rgba(34, 139, 75, 0.16);
+  border-color: rgba(72, 187, 120, 0.45);
+}
+
+.error {
+  color: #ffd0d0;
+  background: rgba(180, 35, 35, 0.16);
+  border-color: rgba(245, 101, 101, 0.45);
+}

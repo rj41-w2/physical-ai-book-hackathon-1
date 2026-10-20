@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: ai-robotics-book-rag
+    runtime: docker
+    plan: free
+    rootDir: rag-backend
+    dockerfilePath: Dockerfile
+    dockerContext: .
+    healthCheckPath: /
+    envVars:
+      - key: NEON_DATABASE_URL
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        sync: false
+      - key: UPSTASH_REDIS_REST_URL
+        sync: false
+      - key: UPSTASH_REDIS_REST_TOKEN
+        sync: false
+      - key: JWT_SECRET_KEY
+        sync: false
+      - key: FRONTEND_URL
+        sync: false

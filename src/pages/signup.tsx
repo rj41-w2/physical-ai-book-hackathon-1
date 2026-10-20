@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Layout from '@theme/Layout';
 import { authClient, useBackendUrl } from '@site/src/lib/auth-client';
-import { useHistory } from '@docusaurus/router';
 import styles from './auth.module.css';
 
 export default function Signup() {
@@ -11,32 +10,36 @@ export default function Signup() {
     password: '',
     name: '',
     softwareBackground: '',
-    hardwareBackground: ''
+    hardwareBackground: '',
   });
-  const history = useHistory();
+  const [notice, setNotice] = useState<{ text: string; kind: 'success' | 'error' } | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    setNotice(null);
+    setIsSubmitting(true);
     try {
       await authClient.signUp.email({
         email: formData.email,
         password: formData.password,
         name: formData.name,
-        // Custom metadata for personalization
         metadata: {
           softwareBackground: formData.softwareBackground,
-          hardwareBackground: formData.hardwareBackground
+          hardwareBackground: formData.hardwareBackground,
         },
-        callbackURL: "/",
+        callbackURL: '/',
       }, {
         onSuccess: () => {
-          alert('Signup Successful!');
-          window.location.href = '/';
+          setNotice({ text: 'Account created! Redirecting…', kind: 'success' });
+          window.setTimeout(() => window.location.assign('/'), 1200);
         },
-        onError: (ctx) => alert(ctx.error.message),
+        onError: (ctx) => setNotice({ text: ctx.error.message, kind: 'error' }),
       }, backendUrl);
     } catch (err: any) {
-      alert(`Signup Failed: ${err.message || "Unknown error"}`);
+      setNotice({ text: `Sign up failed: ${err.message || 'Unknown error'}`, kind: 'error' });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -50,21 +53,23 @@ export default function Signup() {
         <div className={styles.authCard}>
           <h1>Create Your Account</h1>
           <p>Join the Physical AI & Robotics community.</p>
-          
+
+          {notice && <div className={`${styles.notice} ${notice.kind === 'success' ? styles.success : styles.error}`} role={notice.kind === 'error' ? 'alert' : 'status'}>{notice.text}</div>}
+
           <form onSubmit={handleSignup} className={styles.authForm}>
             <div className={styles.formGroup}>
-              <label>Full Name</label>
-              <input name="name" type="text" placeholder="Rehan Jamil" onChange={handleChange} required />
+              <label htmlFor="signup-name">Full Name</label>
+              <input id="signup-name" name="name" type="text" placeholder="Rehan Jamil" onChange={handleChange} required />
             </div>
 
             <div className={styles.formGroup}>
-              <label>Email Address</label>
-              <input name="email" type="email" placeholder="rehanjamil@gmail.com" onChange={handleChange} required />
+              <label htmlFor="signup-email">Email Address</label>
+              <input id="signup-email" name="email" type="email" placeholder="rehanjamil@gmail.com" onChange={handleChange} required />
             </div>
 
             <div className={styles.formGroup}>
-              <label>Password</label>
-              <input name="password" type="password" placeholder="••••••••" onChange={handleChange} required />
+              <label htmlFor="signup-password">Password</label>
+              <input id="signup-password" name="password" type="password" placeholder="••••••••" onChange={handleChange} required />
             </div>
 
             <hr className={styles.divider} />
@@ -72,8 +77,8 @@ export default function Signup() {
             <p className={styles.hint}>Tell us about your background to customize your learning experience.</p>
 
             <div className={styles.formGroup}>
-              <label>Software Background</label>
-              <select name="softwareBackground" onChange={handleChange} required defaultValue="">
+              <label htmlFor="software-background">Software Background</label>
+              <select id="software-background" name="softwareBackground" onChange={handleChange} required defaultValue="">
                 <option value="" disabled>Select experience level</option>
                 <option value="beginner">Beginner (No coding)</option>
                 <option value="intermediate">Intermediate (Python/JS)</option>
@@ -82,8 +87,8 @@ export default function Signup() {
             </div>
 
             <div className={styles.formGroup}>
-              <label>Hardware Background</label>
-              <select name="hardwareBackground" onChange={handleChange} required defaultValue="">
+              <label htmlFor="hardware-background">Hardware Background</label>
+              <select id="hardware-background" name="hardwareBackground" onChange={handleChange} required defaultValue="">
                 <option value="" disabled>Select experience level</option>
                 <option value="none">No experience</option>
                 <option value="hobbyist">Hobbyist (Arduino/Raspberry Pi)</option>
@@ -91,8 +96,8 @@ export default function Signup() {
               </select>
             </div>
 
-            <button type="submit" className="button button--primary button--lg">
-              Sign Up & Personalize
+            <button type="submit" className="button button--primary button--lg" disabled={isSubmitting}>
+              {isSubmitting ? 'Creating Account…' : 'Sign Up & Personalize'}
             </button>
           </form>
         </div>

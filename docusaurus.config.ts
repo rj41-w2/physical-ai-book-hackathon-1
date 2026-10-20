@@ -15,7 +15,7 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://physical-ai-book.example.com',
+  url: process.env.SITE_URL || 'http://localhost:3000',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -126,7 +126,7 @@ const config: Config = {
             },
             {
               label: 'Rehan\'s Profile',
-              href: 'https://github.com/rj41-w2',
+              href: 'https://rehanjamil41.vercel.app/',
             },
           ],
         },

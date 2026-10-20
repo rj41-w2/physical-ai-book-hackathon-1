@@ -186,3 +186,77 @@
     right: -1rem;
   }
 }
+
+.chatNotice {
+  position: fixed;
+  left: 1.5rem;
+  bottom: 7rem;
+  z-index: 1100;
+  max-width: min(24rem, calc(100vw - 2rem));
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(72, 187, 120, 0.45);
+  border-radius: 8px;
+  color: var(--ifm-font-color-base);
+  background: rgba(34, 139, 75, 0.16);
+  font-size: 0.9rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+}
+
+.confirmOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.62);
+}
+
+.confirmDialog {
+  width: min(100%, 24rem);
+  padding: 1.25rem;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  background: var(--card-bg);
+  color: var(--ifm-font-color-base);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+}
+
+.confirmDialog h4 {
+  margin: 0 0 0.5rem;
+  color: var(--ifm-font-color-base);
+}
+
+.confirmDialog p {
+  margin: 0 0 1.1rem;
+  color: var(--page-secondary-text);
+}
+
+.confirmActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+@media (max-width: 480px) {
+  .chatNotice {
+    left: 1rem;
+    bottom: 6.5rem;
+  }
+}
+
+.confirmActions button {
+  padding: 0.4rem 0.65rem;
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  color: var(--ifm-font-color-base);
+  background: var(--page-bg);
+  cursor: pointer;
+}
+
+.confirmActions .confirmDelete {
+  border-color: #b42318;
+  color: #fff;
+  background: #b42318;
+}

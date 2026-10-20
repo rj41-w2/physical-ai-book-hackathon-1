@@ -5,6 +5,9 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useBackendUrl } from '@site/src/lib/auth-client';
 
+const stripSourceCitations = (content: string) =>
+  content.replace(/\s*(?:\[[^\]]+\.mdx\]|【[^】]+\.mdx】)/gi, '').trim();
+
 interface Message {
   role: 'user' | 'assistant';
   content: string;
@@ -18,6 +21,8 @@ const ChatWidget: React.FC = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isConfirmingClear, setIsConfirmingClear] = useState(false);
+  const [notice, setNotice] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,7 +38,7 @@ const ChatWidget: React.FC = () => {
             if (history.length > 0) {
               const formattedHistory = history.map((msg: any) => ({
                 role: msg.message_role,
-                content: msg.message_content
+                content: msg.message_role === 'assistant' ? stripSourceCitations(msg.message_content) : msg.message_content
               }));
               setMessages(formattedHistory);
             }
@@ -95,7 +100,7 @@ const ChatWidget: React.FC = () => {
       } else {
         setMessages(prev => [...prev, { 
           role: 'assistant', 
-          content: data.response || 'I received an empty response from the server.' 
+          content: stripSourceCitations(data.response || 'I received an empty response from the server.')
         }]);
       }
     } catch (error) {
@@ -116,8 +121,6 @@ const ChatWidget: React.FC = () => {
   };
 
   const handleClearHistory = async () => {
-    if (!window.confirm("Are you sure you want to clear your chat history?")) return;
-    
     const token = localStorage.getItem("token");
     if (!token) return;
 
@@ -126,12 +129,16 @@ const ChatWidget: React.FC = () => {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      
-      if (response.ok) {
-        setMessages([{ role: 'assistant', content: 'Hi! I\'m your AI assistant. How can I help you today?' }]);
-      }
+      if (!response.ok) throw new Error('Could not clear chat history. Please try again.');
+
+      setMessages([{ role: 'assistant', content: 'Hi! I\'m your AI assistant. How can I help you today?' }]);
+      setIsConfirmingClear(false);
+      setNotice('Chat history cleared.');
+      window.setTimeout(() => setNotice(''), 3000);
     } catch (err) {
       console.error("Failed to clear history:", err);
+      setNotice(err instanceof Error ? err.message : 'Could not clear chat history. Please try again.');
+      window.setTimeout(() => setNotice(''), 4000);
     }
   };
 
@@ -155,7 +162,7 @@ const ChatWidget: React.FC = () => {
             <h3 style={{ color: 'white', margin: 0 }}>AI Assistant</h3>
             {localStorage.getItem("token") && (
               <button 
-                onClick={handleClearHistory} 
+                onClick={() => { setNotice(''); setIsConfirmingClear(true); }}
                 className={styles.clearButton}
                 title="Clear History"
               >
@@ -163,7 +170,27 @@ const ChatWidget: React.FC = () => {
               </button>
             )}
           </div>
-          
+
+          {notice && <div className={styles.chatNotice} role="status">{notice}</div>}
+          {isConfirmingClear && (
+            <div className={styles.confirmOverlay} onClick={() => setIsConfirmingClear(false)}>
+              <div
+                className={styles.confirmDialog}
+                role="alertdialog"
+                aria-modal="true"
+                aria-labelledby="clear-history-title"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <h4 id="clear-history-title">Clear chat history?</h4>
+                <p>Your saved conversations will be deleted.</p>
+                <div className={styles.confirmActions}>
+                  <button type="button" onClick={() => setIsConfirmingClear(false)}>Cancel</button>
+                  <button type="button" className={styles.confirmDelete} onClick={handleClearHistory}>Delete history</button>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className={styles.messageArea}>
             {messages.map((msg, index) => (
               <div 

@@ -73,15 +73,15 @@ def test_prompt_forbids_unsupported_claims_when_context_missing():
     assert "Latin letters" in prompt
 
 
-def test_prompt_requires_citations_for_retrieved_context():
+def test_prompt_keeps_sources_internal_for_retrieved_context():
     prompt = build_system_prompt("[intro.mdx]\nThe book has four modules.")
-    assert "Cite each factual book claim" in prompt
+    assert "never show citations, filenames, source paths" in prompt
     assert "[intro.mdx]" in prompt
 
 
 def test_prompt_preserves_module_vs_chapter_and_roman_urdu_script():
     prompt = build_system_prompt("[intro.mdx]\nThis textbook is divided into four core modules.")
     assert 'a "module" is not automatically a "chapter"' in prompt
-    assert "plain ASCII square brackets" in prompt
+    assert "never show citations, filenames, source paths" in prompt
     assert "Latin letters only" in prompt
     assert "never use Devanagari" in prompt
