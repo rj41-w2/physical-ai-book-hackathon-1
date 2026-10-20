@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from sqlalchemy import text
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -46,6 +45,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from database.neon_db import get_db
 from models.schema import User
+from services.tenant_context import set_current_user_context
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/signin")
 
@@ -64,5 +64,5 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_
     user = db.query(User).filter(User.email == email).first()
     if user is None:
         raise credentials_exception
-    db.execute(text("SELECT set_config('app.current_user_id', :user_id, true)"), {"user_id": str(user.id)})
+    set_current_user_context(db, user.id)
     return user

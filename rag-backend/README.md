@@ -18,7 +18,7 @@ This is the FastAPI backend for the Physical AI & Robotics Course. It handles ve
 1. Copy `.env.example` to `.env` in this directory and add your credentials. Never commit `.env` or put secret values in chat.
 2. Fill in the following:
    - `GROQ_API_KEY`: Get from [Groq Console](https://console.groq.com/).
-   - `GROQ_MODEL`: Optional; defaults to `openai/gpt-oss-120b`.
+   - `GROQ_MODEL`: Required model ID; `.env.example` uses `openai/gpt-oss-120b`.
    - `NEON_DATABASE_URL`: Get from [Neon.tech](https://neon.tech/).
    - `UPSTASH_REDIS_REST_URL` & `UPSTASH_REDIS_REST_TOKEN`: Get from [Upstash](https://upstash.com/).
    - `JWT_SECRET_KEY`: Any long random string.
@@ -43,11 +43,13 @@ python init_db.py
 ```
 
 ### 3. Ingest Book Data
-Create the schema and pgvector extension, then convert `.mdx` files into vectors in Neon.
+Create the schema and pgvector extension, then recursively ingest all `.mdx` files under `../docs` (including the introduction and every module) into Neon.
 ```bash
 python init_db.py
 python ingest_book.py
 ```
+
+RAG components live in `services/rag/`: `ingestion.py` discovers and cleans MDX documents, `retrieval.py` searches pgvector and returns source scores, and `prompting.py` keeps answers grounded and concise. To diagnose an empty or stale book index, rerun ingestion and check the printed chunk total. `POST /api/chat` also returns the retrieved `sources` and similarity scores for debugging.
 
 ### 4. Start the Server
 ```bash

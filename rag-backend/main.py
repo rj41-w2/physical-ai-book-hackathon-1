@@ -5,32 +5,20 @@ from openai import AsyncOpenAI
 from dotenv import load_dotenv
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from sqlalchemy import text
 
 from database.neon_db import get_db
 from models.schema import ChatHistory, User
-from services.vector_search import vector_search_service
+from services.rag.retrieval import vector_search_service
+from services.rag.prompting import build_system_prompt
 from services.rate_limit import enforce_rate_limit
 from services.auth_service import decode_access_token
+from services.tenant_context import set_current_user_context
 from routers import auth, chat, user
 
 load_dotenv()
 GROQ_MODEL = os.getenv("GROQ_MODEL")
 if not GROQ_MODEL:
     raise ValueError("GROQ_MODEL is not set; add it to rag-backend/.env")
-
-RESPONSE_STYLE = """
-Keep answers concise, direct, and useful: usually 2-4 sentences and under 80 words.
-For simple questions, answer in 1-2 sentences. Use up to 3 bullets only when they make
-the answer clearer; do not use tables unless the user asks for one. Avoid repeating
-the answer as a separate summary or adding an unsolicited follow-up offer.
-Match the user's language and script. If the user writes in Roman Urdu or mixes Roman
-Urdu with Urdu script, reply in Roman Urdu using Latin letters. Use Urdu script only
-when the user writes entirely in Urdu script. Keep standard technical terms in English.
-For book-specific claims, rely on the supplied context and do not invent chapters,
-examples, or features. If context lacks the answer, say so briefly, then give a short
-general explanation when helpful.
-"""
 
 from fastapi.responses import JSONResponse
 import traceback
@@ -115,25 +103,18 @@ async def chat(request: ChatRequest, http_request: Request, db: Session = Depend
                 if current_user and current_user.preferences:
                     personalization_context = f"\nUSER PROFILE: The user has indicated their background is: {current_user.preferences.background}. Please adjust your technical depth accordingly."
                 if current_user:
-                    db.execute(text("SELECT set_config('app.current_user_id', :user_id, true)"), {"user_id": str(current_user.id)})
+                    set_current_user_context(db, current_user.id)
 
         identity = f"user:{current_user.id}" if current_user else f"ip:{http_request.client.host if http_request.client else 'unknown'}"
         await enforce_rate_limit(identity)
 
         # 2. Retrieve relevant context from Neon pgvector
-        context = vector_search_service.search(db, request.message)
+        retrieved_chunks = vector_search_service.search(db, request.message)
+        context = vector_search_service.format_context(retrieved_chunks)
 
-        # 3. Build the augmented prompt
-        system_prompt = f"""
-You are the AI assistant for the "Physical AI & Humanoid Robotics" book.
-Use the following context from the book to answer the user's question.
-{RESPONSE_STYLE}
-{personalization_context}
+        # 3. Ground the answer in retrieved excerpts and require source citations.
+        system_prompt = build_system_prompt(context, personalization_context)
 
-CONTEXT:
-{context}
-"""
-        
         response = await client.chat.completions.create(
             model=GROQ_MODEL,
             messages=[
@@ -154,8 +135,14 @@ CONTEXT:
 
         return {
             "response": assistant_response,
-            "context_used": context[:200] + "..." 
+            "context_used": context[:500],
+            "sources": [
+                {"source": chunk.source, "similarity": round(chunk.similarity, 4)}
+                for chunk in retrieved_chunks
+            ],
         }
+    except HTTPException:
+        raise
     except Exception as e:
         traceback.print_exc()
         raise HTTPException(
@@ -170,11 +157,13 @@ async def chat_test(request: ChatRequest, http_request: Request):
         response = await client.chat.completions.create(
             model=GROQ_MODEL,
             messages=[
-                {"role": "system", "content": f"You are the AI assistant for a robotics book.\n{RESPONSE_STYLE}"},
+                {"role": "system", "content": "You are a helpful robotics assistant. Keep the answer concise and match the user language and script."},
                 {"role": "user", "content": request.message}
             ]
         )
         return {"response": response.choices[0].message.content}
+    except HTTPException:
+        raise
     except Exception as e:
         traceback.print_exc()
         raise HTTPException(

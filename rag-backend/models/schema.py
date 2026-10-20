@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 from database.neon_db import Base
 from pgvector.sqlalchemy import Vector
+from services.rag.config import EMBEDDING_DIMENSION
 
 class User(Base):
     __tablename__ = "users"
@@ -46,4 +47,4 @@ class BookChunk(Base):
     source = Column(String, nullable=False)
     chunk_index = Column(Integer, nullable=False)
     text = Column(Text, nullable=False)
-    embedding = Column(Vector(384), nullable=False)
+    embedding = Column(Vector(EMBEDDING_DIMENSION), nullable=False)
